@@ -1,0 +1,31 @@
+# libterminfo Makefile
+
+.POSIX:
+
+CC ?=		cc
+CFLAGS ?=	-O2 -pipe
+
+AR ?=	ar
+SH ?=	/bin/sh
+
+LIB =	libterminfo.a
+OBJS =	term.o ti.o setupterm.o curterm.o tparm.o tputs.o \
+	compile.o hash.o termcap.o mi_vector_hash.o cdbr.o
+
+all:	${OBJS}
+	${AR} cr ${LIB} ${OBJS}
+	ranlib ${LIB}
+
+tic: libterminfo.a
+	${CC} ${CFLAGS} ${LDFLAGS} -o tic tic.c cdbw.c libterminfo.a
+
+regen-database: tic
+	${SH} genterms terminfo_term.h /usr/share/terminfo > compiled_terms.c
+
+nbperf:
+	${CC} ${CFLAGS} ${LDFLAGS} -o nbperf graph2.c graph3.c \
+		nbperf-bdz.c nbperf-chm.c nbperf-chm3.c nbperf.c \
+			mi_vector_hash.c
+
+clean:
+	rm -f ${LIB} ${OBJS} tic nbperf
