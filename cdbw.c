@@ -40,6 +40,10 @@
 
 #include "cdbw.h"
 
+void le32enc(void *, uint32_t);
+void mi_vector_hash(const void * __restrict, size_t, uint32_t,
+    uint32_t[3]);
+
 struct key_hash {
 	SLIST_ENTRY(key_hash) link;
 	uint32_t hashes[3];
